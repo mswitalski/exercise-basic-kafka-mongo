@@ -1,10 +1,13 @@
 package mswitalski.exercises.basickafkamongo.kafkaloader;
 
-import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.DatabaseReceiver;
-import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.PostgresReceiver;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
+import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.DataReceiver;
+import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.JdbcDataReceiver;
+import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.ReceiverException;
 import org.apache.log4j.BasicConfigurator;
 
-import java.sql.SQLException;
+import java.util.Properties;
 
 /**
  * Application responsible for receiving data from chosen database
@@ -17,15 +20,25 @@ import java.sql.SQLException;
  *   - Databases:
  *     * none
  */
+@Slf4j
 public class KafkaLoaderApp {
 
-  public static void main(String... args) throws SQLException {
-    BasicConfigurator.configure();
+    public static void main(String... args) throws ReceiverException {
+        BasicConfigurator.configure();
 
-    System.out.println("Hello world from Kafka Loader App!");
-    DatabaseReceiver receiver = new PostgresReceiver();
-    receiver.connect();
-    receiver.getAll();
-    receiver.disconnect();
-  }
+        System.out.println("Hello world from Kafka Loader App!");
+        runReceiver();
+    }
+
+    private static void runReceiver() throws ReceiverException {
+        val connectionUrl = "jdbc:postgresql://localhost:5432/kafka-mongo-db";
+        val properties = new Properties();
+        properties.setProperty("user", "postgres");
+        properties.setProperty("password", "postgres");
+        properties.setProperty("ssl", "false");
+        DataReceiver receiver = new JdbcDataReceiver(connectionUrl, properties);
+        receiver.connect();
+        receiver.getAllRecords().forEach(c -> log.info(c.toString()));
+        receiver.disconnect();
+    }
 }

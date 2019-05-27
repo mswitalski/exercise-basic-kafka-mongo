@@ -7,11 +7,11 @@ import lombok.Data;
 @Data
 public class CustomerModel {
 
-  private int id;
-  private String name;
-  private String surname;
-  private String email;
-  private String address;
-  private String gender;
-  private String occupation;
+    private int id;
+    private String name;
+    private String surname;
+    private String email;
+    private String address;
+    private String gender;
+    private String occupation;
 }
