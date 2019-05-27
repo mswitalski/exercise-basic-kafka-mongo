@@ -1,12 +1,15 @@
-package mswitalski.exercises.basickafkamongo.kafkaloader.receiver;
+package mswitalski.exercises.basickafkamongo.kafkaloader.receiver.jdbc;
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import mswitalski.exercises.basickafkamongo.kafkaloader.domain.CustomerModel;
+import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.DataReceiver;
+import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.ReceiverException;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.stream.Stream;
 
@@ -15,19 +18,27 @@ public class JdbcDataReceiver implements DataReceiver {
 
     private String dbUrl;
     private final Properties properties;
+    private DriverManagerWrapper driverManager;
     private Connection conn;
 
     public JdbcDataReceiver(String databaseUrl, Properties properties) {
-        this.properties = properties;
-        this.dbUrl = databaseUrl;
+        this.dbUrl = Objects.requireNonNull(databaseUrl);
+        this.properties = Objects.requireNonNull(properties);
+        this.driverManager = DriverManagerWrapper.INSTANCE;
+    }
+
+    public JdbcDataReceiver(String databaseUrl, Properties properties, DriverManagerWrapper driverManager) {
+        this.dbUrl = Objects.requireNonNull(databaseUrl);
+        this.properties = Objects.requireNonNull(properties);
+        this.driverManager = Objects.requireNonNull(driverManager);
     }
 
     public void connect() throws ReceiverException {
         try {
             if (properties.isEmpty()) {
-                conn = DriverManager.getConnection(dbUrl);
+                conn = driverManager.getConnection(dbUrl);
             } else {
-                conn = DriverManager.getConnection(dbUrl, properties);
+                conn = driverManager.getConnection(dbUrl, properties);
             }
             conn.setAutoCommit(true);
             log.info("Connected");
