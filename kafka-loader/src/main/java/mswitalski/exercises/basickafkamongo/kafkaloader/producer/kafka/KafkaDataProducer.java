@@ -11,18 +11,17 @@ import java.util.stream.Stream;
 public class KafkaDataProducer<T> implements DataProducer<T> {
 
     private KafkaProducer<Long, T> producer;
-    private Properties properties;
+    private String topicName;
 
     public KafkaDataProducer(Properties properties) {
         Objects.requireNonNull(properties);
-        this.properties = properties;
-        this.producer = new KafkaProducer<>(this.properties);
+        this.topicName = Objects.requireNonNull(properties.getProperty("topic.name"));
+        this.producer = new KafkaProducer<>(properties);
     }
 
     @Override
     public void send(Stream<T> dataStream) {
-        dataStream.forEach(element ->
-                producer.send(new ProducerRecord<>(properties.getProperty("topic.name"), element))
-        );
+        dataStream.forEach(el -> producer.send(new ProducerRecord<>(topicName, el)));
+        producer.close();
     }
 }

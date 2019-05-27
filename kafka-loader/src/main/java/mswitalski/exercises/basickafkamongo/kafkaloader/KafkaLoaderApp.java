@@ -11,8 +11,9 @@ import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.DataReceiver;
 import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.ReceiverException;
 import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.jdbc.JdbcDataReceiver;
 import mswitalski.exercises.basickafkamongo.common.util.PropertyReader;
-import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.xml.DOMConfigurator;
 
+import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
@@ -30,7 +31,8 @@ import java.util.stream.Stream;
 public class KafkaLoaderApp {
 
     public static void main(String... args) throws ReceiverException {
-        BasicConfigurator.configure();
+        DOMConfigurator.configure(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource
+                ("log4j.xml")).getPath());
 
         System.out.println("Hello world from Kafka Loader App!");
         Stream<CustomerModel> allRecords = runReceiver();
