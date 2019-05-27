@@ -1,13 +1,30 @@
 version: '3.5'
 
 services:
-  db:
-    image: postgres
+  postgres:
+    image: 'postgres:latest'
     restart: always
     ports:
      - '5432:5432'
     environment:
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: kafka-mongo-db
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DB: 'kafka-mongo-db'
     volumes:
     - ../scripts/db-init.sql:/docker-entrypoint-initdb.d/init.sql
+  zookeeper:
+    image: 'bitnami/zookeeper:latest'
+    ports:
+      - '2181:2181'
+    environment:
+      ALLOW_ANONYMOUS_LOGIN: 'yes'
+  kafka:
+    image: 'bitnami/kafka:latest'
+    ports:
+      - '9092:9092'
+      - '29092:29092'
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      ALLOW_PLAINTEXT_LISTENER: 'yes'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT'
+      KAFKA_LISTENERS: 'PLAINTEXT://:9092,PLAINTEXT_HOST://:29092'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092'
