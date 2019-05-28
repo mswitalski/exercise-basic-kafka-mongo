@@ -3,6 +3,7 @@ package mswitalski.exercises.basickafkamongo.mongoloader.consumer.kafka;
 import lombok.extern.slf4j.Slf4j;
 import mswitalski.exercises.basickafkamongo.common.domain.CustomerModel;
 import mswitalski.exercises.basickafkamongo.mongoloader.consumer.DataConsumer;
+import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -30,7 +31,7 @@ public class KafkaCustomerDataConsumer implements DataConsumer<CustomerModel> {
 
     @Override
     public Stream<CustomerModel> poll() {
-        try (KafkaConsumer<Long, CustomerModel> consumer = consumerCreator.create(consumerProperties)) {
+        try (Consumer<Long, CustomerModel> consumer = consumerCreator.create(consumerProperties)) {
             consumer.subscribe(Collections.singletonList(topicName));
             ConsumerRecords<Long, CustomerModel> consumerRecords = consumer.poll(Duration.ofSeconds(1));
             Spliterator<ConsumerRecord<Long, CustomerModel>> spliterator = consumerRecords.spliterator();

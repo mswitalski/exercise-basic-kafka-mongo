@@ -2,7 +2,7 @@ package mswitalski.exercises.basickafkamongo.kafkaloader.producer.kafka;
 
 import lombok.extern.slf4j.Slf4j;
 import mswitalski.exercises.basickafkamongo.kafkaloader.producer.DataProducer;
-import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
 import java.util.Objects;
@@ -24,7 +24,7 @@ public class KafkaDataProducer<K, V> implements DataProducer<V> {
 
     @Override
     public void send(Stream<V> dataStream) {
-        try (KafkaProducer<K, V> conn = producerCreator.create(properties)) {
+        try (Producer<K, V> conn = producerCreator.create(properties)) {
             dataStream.forEach(el -> conn.send(
                 new ProducerRecord<>(topicName, el),
                 (metadata, exception) -> log.info("Data was sent to Kafka to topic " + metadata.topic()))
