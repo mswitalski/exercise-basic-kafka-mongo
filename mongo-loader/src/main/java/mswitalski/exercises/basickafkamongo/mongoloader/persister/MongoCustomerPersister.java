@@ -11,6 +11,7 @@ import mswitalski.exercises.basickafkamongo.common.domain.CustomerModel;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
+import java.util.Objects;
 import java.util.Properties;
 
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
@@ -23,7 +24,7 @@ public class MongoCustomerPersister implements DataPersister<CustomerModel> {
     private CodecRegistry pojoCodecRegistry;
 
     public MongoCustomerPersister(Properties properties) {
-        this.properties = properties;
+        this.properties = Objects.requireNonNull(properties);
         this.pojoCodecRegistry = fromRegistries(MongoClient.getDefaultCodecRegistry(),
             fromProviders(PojoCodecProvider.builder().automatic(true).build()));
     }

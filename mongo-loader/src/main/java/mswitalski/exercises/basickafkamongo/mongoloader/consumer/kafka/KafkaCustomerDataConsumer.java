@@ -24,7 +24,7 @@ public class KafkaCustomerDataConsumer implements DataConsumer<CustomerModel> {
 
     public KafkaCustomerDataConsumer(Properties properties, KafkaConsumerCreator<Long, CustomerModel> consumerCreator) {
         this.consumerProperties = Objects.requireNonNull(properties);
-        this.consumerCreator = consumerCreator;
+        this.consumerCreator = Objects.requireNonNull(consumerCreator);
         this.topicName = Objects.requireNonNull(properties.getProperty("topic.name"));
     }
 

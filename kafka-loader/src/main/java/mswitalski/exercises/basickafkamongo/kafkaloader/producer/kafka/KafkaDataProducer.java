@@ -18,7 +18,7 @@ public class KafkaDataProducer<K, V> implements DataProducer<V> {
 
     public KafkaDataProducer(Properties properties, KafkaProducerCreator<K, V> producerCreator) {
         this.properties = Objects.requireNonNull(properties);
-        this.producerCreator = producerCreator;
+        this.producerCreator = Objects.requireNonNull(producerCreator);
         this.topicName = Objects.requireNonNull(properties.getProperty("topic.name"));
     }
 

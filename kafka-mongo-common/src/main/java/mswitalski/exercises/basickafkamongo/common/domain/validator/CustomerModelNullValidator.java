@@ -11,8 +11,9 @@ public class CustomerModelNullValidator implements ModelValidator<CustomerModel>
 
     @Override
     public boolean isValid(CustomerModel model) {
-        return Objects.nonNull(model.getAddress()) &&
-                Objects.nonNull(model.getGender()) &&
-                Objects.nonNull(model.getOccupation());
+        return Objects.nonNull(model) &&
+            Objects.nonNull(model.getAddress()) &&
+            Objects.nonNull(model.getGender()) &&
+            Objects.nonNull(model.getOccupation());
     }
 }

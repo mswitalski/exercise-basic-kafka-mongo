@@ -5,6 +5,7 @@ import mswitalski.exercises.basickafkamongo.common.domain.validator.ModelValidat
 import mswitalski.exercises.basickafkamongo.kafkaloader.producer.DataProducer;
 import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.DataReceiver;
 
+import java.util.Objects;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -15,9 +16,9 @@ class FlowOrchestrator<T> {
     private DataProducer<T> producer;
 
     FlowOrchestrator(DataReceiver<T> receiver, ModelValidator<T> validator, DataProducer<T> producer) {
-        this.receiver = receiver;
-        this.validator = validator;
-        this.producer = producer;
+        this.receiver = Objects.requireNonNull(receiver);
+        this.validator = Objects.requireNonNull(validator);
+        this.producer = Objects.requireNonNull(producer);
     }
 
     void run() {
