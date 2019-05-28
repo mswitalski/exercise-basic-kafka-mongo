@@ -8,6 +8,7 @@ import mswitalski.exercises.basickafkamongo.common.domain.validator.ModelValidat
 import mswitalski.exercises.basickafkamongo.common.util.PropertyReader;
 import mswitalski.exercises.basickafkamongo.kafkaloader.producer.DataProducer;
 import mswitalski.exercises.basickafkamongo.kafkaloader.producer.kafka.KafkaDataProducer;
+import mswitalski.exercises.basickafkamongo.kafkaloader.producer.kafka.KafkaProducerCreator;
 import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.DataReceiver;
 import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.ReceiverException;
 import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.jdbc.CustomerRepository;
@@ -63,6 +64,10 @@ public class KafkaLoaderApp {
 
     private static DataProducer<CustomerModel> getCustomerDataProducer() {
         val properties = new PropertyReader().getPropertiesByFilename("kafka-producer.properties");
-        return new KafkaDataProducer<>(properties);
+        return new KafkaDataProducer<>(properties, getKafkaProducerCreatorForCustomer());
+    }
+
+    private static KafkaProducerCreator<Long, CustomerModel> getKafkaProducerCreatorForCustomer() {
+        return new KafkaProducerCreator<>();
     }
 }

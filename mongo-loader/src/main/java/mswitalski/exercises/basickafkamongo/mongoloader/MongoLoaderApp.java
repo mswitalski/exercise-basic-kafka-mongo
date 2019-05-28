@@ -5,6 +5,7 @@ import lombok.val;
 import mswitalski.exercises.basickafkamongo.common.domain.CustomerModel;
 import mswitalski.exercises.basickafkamongo.common.util.PropertyReader;
 import mswitalski.exercises.basickafkamongo.mongoloader.consumer.DataConsumer;
+import mswitalski.exercises.basickafkamongo.mongoloader.consumer.kafka.KafkaConsumerCreator;
 import mswitalski.exercises.basickafkamongo.mongoloader.consumer.kafka.KafkaCustomerDataConsumer;
 import mswitalski.exercises.basickafkamongo.mongoloader.persister.DataPersister;
 import mswitalski.exercises.basickafkamongo.mongoloader.persister.MongoCustomerPersister;
@@ -40,11 +41,15 @@ public class MongoLoaderApp {
 
     private static DataConsumer<CustomerModel> getCustomerConsumer() {
         val properties = new PropertyReader().getPropertiesByFilename("kafka-consumer.properties");
-        return new KafkaCustomerDataConsumer(properties);
+        return new KafkaCustomerDataConsumer(properties, getKafkaConsumerCreatorForCustomer());
     }
 
     private static DataPersister<CustomerModel> getCustomerPersister() {
         val properties = new PropertyReader().getPropertiesByFilename("mongo.properties");
         return new MongoCustomerPersister(properties);
+    }
+
+    private static KafkaConsumerCreator<Long, CustomerModel> getKafkaConsumerCreatorForCustomer() {
+        return new KafkaConsumerCreator<>();
     }
 }

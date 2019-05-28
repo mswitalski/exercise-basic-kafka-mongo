@@ -10,19 +10,21 @@ import java.util.Properties;
 import java.util.stream.Stream;
 
 @Slf4j
-public class KafkaDataProducer<T> implements DataProducer<T> {
+public class KafkaDataProducer<K, V> implements DataProducer<V> {
 
     private Properties properties;
+    private KafkaProducerCreator<K, V> producerCreator;
     private String topicName;
 
-    public KafkaDataProducer(Properties properties) {
+    public KafkaDataProducer(Properties properties, KafkaProducerCreator<K, V> producerCreator) {
         this.properties = Objects.requireNonNull(properties);
+        this.producerCreator = producerCreator;
         this.topicName = Objects.requireNonNull(properties.getProperty("topic.name"));
     }
 
     @Override
-    public void send(Stream<T> dataStream) {
-        try (KafkaProducer<Long, T> conn = new KafkaProducer<>(properties)) {
+    public void send(Stream<V> dataStream) {
+        try (KafkaProducer<K, V> conn = producerCreator.create(properties)) {
             dataStream.forEach(el -> conn.send(
                 new ProducerRecord<>(topicName, el),
                 (metadata, exception) -> log.info("Data was sent to Kafka to topic " + metadata.topic()))
