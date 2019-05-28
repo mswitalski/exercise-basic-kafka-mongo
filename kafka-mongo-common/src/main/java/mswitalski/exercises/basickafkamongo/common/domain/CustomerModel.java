@@ -1,10 +1,14 @@
-package mswitalski.exercises.basickafkamongo.kafkaloader.domain;
+package mswitalski.exercises.basickafkamongo.common.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CustomerModel {
 
     private int id;

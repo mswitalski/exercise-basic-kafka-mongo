@@ -1,6 +1,6 @@
 package mswitalski.exercises.basickafkamongo.kafkaloader.receiver;
 
-import mswitalski.exercises.basickafkamongo.kafkaloader.domain.CustomerModel;
+import mswitalski.exercises.basickafkamongo.common.domain.CustomerModel;
 
 import java.util.stream.Stream;
 

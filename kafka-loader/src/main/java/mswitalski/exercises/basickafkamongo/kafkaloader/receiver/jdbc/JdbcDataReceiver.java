@@ -2,7 +2,7 @@ package mswitalski.exercises.basickafkamongo.kafkaloader.receiver.jdbc;
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import mswitalski.exercises.basickafkamongo.kafkaloader.domain.CustomerModel;
+import mswitalski.exercises.basickafkamongo.common.domain.CustomerModel;
 import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.DataReceiver;
 import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.ReceiverException;
 
@@ -40,7 +40,7 @@ public class JdbcDataReceiver implements DataReceiver {
             } else {
                 conn = driverManager.getConnection(dbUrl, properties);
             }
-            conn.setAutoCommit(true);
+            conn.setAutoCommit(false);
             log.info("Connected");
 
         } catch (SQLException e) {

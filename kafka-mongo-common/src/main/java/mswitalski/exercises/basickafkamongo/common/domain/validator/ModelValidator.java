@@ -1,4 +1,4 @@
-package mswitalski.exercises.basickafkamongo.kafkaloader.domain.validator;
+package mswitalski.exercises.basickafkamongo.common.domain.validator;
 
 /**
  * Interface defining behavior for model validators.

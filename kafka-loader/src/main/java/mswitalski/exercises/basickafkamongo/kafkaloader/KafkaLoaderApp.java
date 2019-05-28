@@ -2,9 +2,9 @@ package mswitalski.exercises.basickafkamongo.kafkaloader;
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import mswitalski.exercises.basickafkamongo.kafkaloader.domain.CustomerModel;
-import mswitalski.exercises.basickafkamongo.kafkaloader.domain.validator.CustomerModelNullValidator;
-import mswitalski.exercises.basickafkamongo.kafkaloader.domain.validator.ModelValidator;
+import mswitalski.exercises.basickafkamongo.common.domain.CustomerModel;
+import mswitalski.exercises.basickafkamongo.common.domain.validator.CustomerModelNullValidator;
+import mswitalski.exercises.basickafkamongo.common.domain.validator.ModelValidator;
 import mswitalski.exercises.basickafkamongo.kafkaloader.producer.DataProducer;
 import mswitalski.exercises.basickafkamongo.kafkaloader.producer.kafka.KafkaDataProducer;
 import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.DataReceiver;
@@ -46,7 +46,7 @@ public class KafkaLoaderApp {
                         return Stream.empty();
                     }
                 });
-        val properties = new PropertyReader().getPropertiesByFilename("kafka.properties");
+        val properties = new PropertyReader().getPropertiesByFilename("kafka-producer.properties");
         DataProducer<CustomerModel> producer = new KafkaDataProducer<>(properties);
         producer.send(filteredRecords);
     }
