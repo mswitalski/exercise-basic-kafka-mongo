@@ -5,16 +5,16 @@ import lombok.val;
 import mswitalski.exercises.basickafkamongo.common.domain.CustomerModel;
 import mswitalski.exercises.basickafkamongo.common.domain.validator.CustomerModelNullValidator;
 import mswitalski.exercises.basickafkamongo.common.domain.validator.ModelValidator;
+import mswitalski.exercises.basickafkamongo.common.util.PropertyReader;
 import mswitalski.exercises.basickafkamongo.kafkaloader.producer.DataProducer;
 import mswitalski.exercises.basickafkamongo.kafkaloader.producer.kafka.KafkaDataProducer;
 import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.DataReceiver;
 import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.ReceiverException;
-import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.jdbc.JdbcDataReceiver;
-import mswitalski.exercises.basickafkamongo.common.util.PropertyReader;
+import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.jdbc.CustomerRepository;
+import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.jdbc.JdbcConnector;
 import org.apache.log4j.xml.DOMConfigurator;
 
 import java.util.Objects;
-import java.util.stream.Stream;
 
 /**
  * Application responsible for receiving data from chosen database
@@ -31,33 +31,38 @@ import java.util.stream.Stream;
 public class KafkaLoaderApp {
 
     public static void main(String... args) throws ReceiverException {
-        DOMConfigurator.configure(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource
-                ("log4j.xml")).getPath());
+        configureLogger();
 
-        System.out.println("Hello world from Kafka Loader App!");
-        Stream<CustomerModel> allRecords = runReceiver();
-        ModelValidator<CustomerModel> validator = new CustomerModelNullValidator();
-        Stream<CustomerModel> filteredRecords = allRecords
-                .flatMap(customer -> {
-                    if (validator.isValid(customer)) {
-                        return Stream.of(customer);
-                    } else {
-                        log.warn("Rejected invalid customer: " + customer);
-                        return Stream.empty();
-                    }
-                });
-        val properties = new PropertyReader().getPropertiesByFilename("kafka-producer.properties");
-        DataProducer<CustomerModel> producer = new KafkaDataProducer<>(properties);
-        producer.send(filteredRecords);
+        FlowOrchestrator<CustomerModel> orchestrator = new FlowOrchestrator<>(
+            getCustomerDataReceiver(getJdbcConnector()),
+            getCustomerNullValidator(),
+            getCustomerDataProducer()
+        );
+
+        orchestrator.run();
     }
 
-    private static Stream<CustomerModel> runReceiver() throws ReceiverException {
-        val properties = new PropertyReader().getPropertiesByFilename("postgres.properties");
-        DataReceiver receiver = new JdbcDataReceiver((String) properties.get("url"), properties);
-        receiver.connect();
-        Stream<CustomerModel> allRecords = receiver.getAllRecords();
-        receiver.disconnect();
+    private static void configureLogger() {
+        DOMConfigurator.configure(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource
+            ("log4j.xml")).getPath());
+    }
 
-        return allRecords;
+    private static ModelValidator<CustomerModel> getCustomerNullValidator() {
+        return new CustomerModelNullValidator();
+    }
+
+    private static DataReceiver<CustomerModel> getCustomerDataReceiver(JdbcConnector connector) {
+        return new CustomerRepository(connector);
+    }
+
+    private static JdbcConnector getJdbcConnector() {
+        val properties = new PropertyReader().getPropertiesByFilename("postgres.properties");
+
+        return new JdbcConnector((String) properties.get("url"), properties);
+    }
+
+    private static DataProducer<CustomerModel> getCustomerDataProducer() {
+        val properties = new PropertyReader().getPropertiesByFilename("kafka-producer.properties");
+        return new KafkaDataProducer<>(properties);
     }
 }
