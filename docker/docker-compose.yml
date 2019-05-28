@@ -19,6 +19,8 @@ services:
       ALLOW_ANONYMOUS_LOGIN: 'yes'
   kafka:
     image: 'bitnami/kafka:latest'
+    depends_on: 
+      - zookeeper
     ports:
       - '9092:9092'
       - '29092:29092'
@@ -38,9 +40,11 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: root
   mongo-express:
     image: mongo-express
+    depends_on: 
+      - mongo
     restart: always
     ports:
-      - 8081:8081
+      - 8085:8081
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: root 
