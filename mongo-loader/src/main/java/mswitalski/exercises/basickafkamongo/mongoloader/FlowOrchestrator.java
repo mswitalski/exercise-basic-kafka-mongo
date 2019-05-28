@@ -16,6 +16,9 @@ class FlowOrchestrator<T> {
     }
 
     void run() {
+        /*
+            TODO: This is a temporary solution and should be improved.
+         */
         IntStream.range(0, 100).forEach(ignored -> dataConsumer.poll()
             .forEach(dataPersister::persistOne)
         );
