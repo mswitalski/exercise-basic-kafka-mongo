@@ -19,43 +19,22 @@ import java.util.stream.StreamSupport;
 public class KafkaCustomerDataConsumer implements DataConsumer<CustomerModel> {
 
     private Properties consumerProperties;
-    private KafkaConsumer<Long, CustomerModel> consumer;
     private String topicName;
 
     public KafkaCustomerDataConsumer(Properties properties) {
-        Objects.requireNonNull(properties);
-        this.consumerProperties = properties;
+        this.consumerProperties = Objects.requireNonNull(properties);
         this.topicName = Objects.requireNonNull(properties.getProperty("topic.name"));
     }
 
     @Override
-    public void connect() {
-        if (consumer == null) {
-            consumer = new KafkaConsumer<>(consumerProperties);
-            consumer.subscribe(Collections.singletonList(topicName));
-            log.warn("Kafka consumer connected to the cluster");
-
-        } else {
-            log.warn("Kafka consumer is already connected");
-        }
-    }
-
-    @Override
     public Stream<CustomerModel> poll() {
-        if (consumer == null) {
-            throw new IllegalStateException("Kafka consumer is not connected to the cluster");
-        }
-        ConsumerRecords<Long, CustomerModel> consumerRecords = consumer.poll(Duration.ofSeconds(1));
-        Spliterator<ConsumerRecord<Long, CustomerModel>> spliterator = consumerRecords.spliterator();
+        try (KafkaConsumer<Long, CustomerModel> consumer = new KafkaConsumer<>(consumerProperties)) {
+            consumer.subscribe(Collections.singletonList(topicName));
+            ConsumerRecords<Long, CustomerModel> consumerRecords = consumer.poll(Duration.ofSeconds(1));
+            Spliterator<ConsumerRecord<Long, CustomerModel>> spliterator = consumerRecords.spliterator();
 
-        return StreamSupport.stream(spliterator, false)
+            return StreamSupport.stream(spliterator, false)
                 .map(ConsumerRecord::value);
-    }
-
-    @Override
-    public void disconnect() {
-        consumer.unsubscribe();
-        consumer.close();
-        consumer = null;
+        }
     }
 }

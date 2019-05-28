@@ -3,6 +3,8 @@ package mswitalski.exercises.basickafkamongo.mongoloader;
 import mswitalski.exercises.basickafkamongo.mongoloader.consumer.DataConsumer;
 import mswitalski.exercises.basickafkamongo.mongoloader.persister.DataPersister;
 
+import java.util.stream.IntStream;
+
 class FlowOrchestrator<T> {
 
     private DataConsumer<T> dataConsumer;
@@ -14,15 +16,8 @@ class FlowOrchestrator<T> {
     }
 
     void run() {
-        dataPersister.connect();
-        dataConsumer.connect();
-
-        for (int i = 0; i < 100; i++) {
-            dataConsumer.poll()
-                .forEach(dataPersister::persist);
-        }
-
-        dataPersister.disconnect();
-        dataConsumer.disconnect();
+        IntStream.range(0, 100).forEach(ignored -> dataConsumer.poll()
+            .forEach(dataPersister::persistOne)
+        );
     }
 }

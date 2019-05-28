@@ -20,34 +20,31 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 public class MongoCustomerPersister implements DataPersister<CustomerModel> {
 
     private Properties properties;
-    private MongoClient mongoClient;
     private CodecRegistry pojoCodecRegistry;
-    private MongoCollection<CustomerModel> collection;
 
     public MongoCustomerPersister(Properties properties) {
         this.properties = properties;
         this.pojoCodecRegistry = fromRegistries(MongoClient.getDefaultCodecRegistry(),
-                fromProviders(PojoCodecProvider.builder().automatic(true).build()));
+            fromProviders(PojoCodecProvider.builder().automatic(true).build()));
     }
 
     @Override
-    public void connect() {
-        if (mongoClient == null) {
-            ServerAddress address = new ServerAddress(
-                    properties.getProperty("host"),
-                    Integer.parseInt(properties.getProperty("port"))
-            );
-            mongoClient = new MongoClient(
-                    address,
-                    prepareMongoCredentials(),
-                    MongoClientOptions.builder().codecRegistry(pojoCodecRegistry).build()
-            );
-            MongoDatabase database = mongoClient.getDatabase(properties.getProperty("database"));
-            collection = database.getCollection(properties.getProperty("collection"), CustomerModel.class);
-
-        } else {
-            log.warn("Connection to MongoDB is already open");
+    public void persistOne(CustomerModel customer) {
+        try (MongoClient client = getMongoClient()) {
+            getCollection(client).insertOne(customer);
         }
+    }
+
+    private MongoClient getMongoClient() {
+        ServerAddress address = new ServerAddress(
+            properties.getProperty("host"),
+            Integer.parseInt(properties.getProperty("port"))
+        );
+        return new MongoClient(
+            address,
+            prepareMongoCredentials(),
+            MongoClientOptions.builder().codecRegistry(pojoCodecRegistry).build()
+        );
     }
 
     private MongoCredential prepareMongoCredentials() {
@@ -57,22 +54,8 @@ public class MongoCustomerPersister implements DataPersister<CustomerModel> {
         return MongoCredential.createCredential(user, authDb, password);
     }
 
-    @Override
-    public void persist(CustomerModel customer) {
-        if (mongoClient == null) {
-            throw new IllegalStateException("Tried to persist while no connection");
-        }
-        collection.insertOne(customer);
-    }
-
-    @Override
-    public void disconnect() {
-        if (mongoClient == null) {
-            log.warn("Connection to MongoDB is already closed");
-            return;
-        }
-        mongoClient.close();
-        mongoClient = null;
-        collection = null;
+    private MongoCollection<CustomerModel> getCollection(MongoClient client) {
+        MongoDatabase database = client.getDatabase(properties.getProperty("database"));
+        return database.getCollection(properties.getProperty("collection"), CustomerModel.class);
     }
 }
