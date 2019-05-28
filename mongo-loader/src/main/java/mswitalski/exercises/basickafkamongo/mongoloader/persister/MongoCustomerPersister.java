@@ -68,6 +68,7 @@ public class MongoCustomerPersister implements DataPersister<CustomerModel> {
     public void disconnect() {
         if (mongoClient == null) {
             log.warn("Connection to MongoDB is already closed");
+            return;
         }
         mongoClient.close();
         mongoClient = null;
