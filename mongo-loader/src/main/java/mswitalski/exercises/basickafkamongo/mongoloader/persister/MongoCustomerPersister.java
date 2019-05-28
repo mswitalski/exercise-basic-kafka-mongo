@@ -11,7 +11,6 @@ import mswitalski.exercises.basickafkamongo.common.domain.CustomerModel;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
-import java.util.Arrays;
 import java.util.Properties;
 
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
@@ -34,17 +33,13 @@ public class MongoCustomerPersister implements DataPersister<CustomerModel> {
     @Override
     public void connect() {
         if (mongoClient == null) {
-            String user = properties.getProperty("user");
-            String authDb = properties.getProperty("auth_db");
-            char[] password = properties.getProperty("password").toCharArray();
-            MongoCredential credential = MongoCredential.createCredential(user, authDb, password);
             ServerAddress address = new ServerAddress(
                     properties.getProperty("host"),
                     Integer.parseInt(properties.getProperty("port"))
             );
             mongoClient = new MongoClient(
                     address,
-                    credential,
+                    prepareMongoCredentials(),
                     MongoClientOptions.builder().codecRegistry(pojoCodecRegistry).build()
             );
             MongoDatabase database = mongoClient.getDatabase(properties.getProperty("database"));
@@ -55,11 +50,17 @@ public class MongoCustomerPersister implements DataPersister<CustomerModel> {
         }
     }
 
+    private MongoCredential prepareMongoCredentials() {
+        String user = properties.getProperty("user");
+        String authDb = properties.getProperty("auth_db");
+        char[] password = properties.getProperty("password").toCharArray();
+        return MongoCredential.createCredential(user, authDb, password);
+    }
+
     @Override
     public void persist(CustomerModel customer) {
         if (mongoClient == null) {
-            log.warn("Connection to MongoDB is closed");
-            throw new RuntimeException("Tried to persist while no connection");
+            throw new IllegalStateException("Tried to persist while no connection");
         }
         collection.insertOne(customer);
     }

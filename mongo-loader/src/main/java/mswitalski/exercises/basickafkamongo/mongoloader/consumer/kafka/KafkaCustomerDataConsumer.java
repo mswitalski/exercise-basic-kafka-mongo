@@ -43,7 +43,7 @@ public class KafkaCustomerDataConsumer implements DataConsumer<CustomerModel> {
     @Override
     public Stream<CustomerModel> poll() {
         if (consumer == null) {
-            log.error("Kafka consumer is not connected to the cluster");
+            throw new IllegalStateException("Kafka consumer is not connected to the cluster");
         }
         ConsumerRecords<Long, CustomerModel> consumerRecords = consumer.poll(Duration.ofSeconds(1));
         Spliterator<ConsumerRecord<Long, CustomerModel>> spliterator = consumerRecords.spliterator();
