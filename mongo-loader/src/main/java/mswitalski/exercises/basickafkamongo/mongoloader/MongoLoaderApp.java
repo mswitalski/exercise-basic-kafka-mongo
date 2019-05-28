@@ -15,44 +15,36 @@ import java.util.Objects;
 /**
  * Application responsible for receiving data from chosen message broker
  * and persisting it in chosen database.
- * <p>
+ *
  * At the moment the following integrations are available:
  * - Message brokers:
- * * none
- * <p>
+ *   * Kafka
+ *
  * - Databases:
- * * none
+ *   * MongoDB
  */
 @Slf4j
 public class MongoLoaderApp {
 
     public static void main(String... args) {
-        System.out.println("Hello world from Mongo Loader App!");
+        configureLogger();
 
+        FlowOrchestrator<CustomerModel> orchestrator = new FlowOrchestrator<>(getCustomerConsumer(), getCustomerPersister());
+        orchestrator.run();
+    }
+
+    private static void configureLogger() {
         DOMConfigurator.configure(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource
-                ("log4j.xml")).getPath());
-        runCustomer();
+            ("log4j.xml")).getPath());
     }
 
-    private static void runCustomer() {
+    private static DataConsumer<CustomerModel> getCustomerConsumer() {
         val properties = new PropertyReader().getPropertiesByFilename("kafka-consumer.properties");
-        DataConsumer<CustomerModel> consumer = new KafkaCustomerDataConsumer(properties);
-        DataPersister<CustomerModel> persister = getPersister();
-        persister.connect();
-        consumer.connect();
-
-        for (int i = 0; i < 100; i++) {
-            consumer.poll()
-                    .forEach(persister::persist);
-        }
-
-        persister.disconnect();
-        consumer.disconnect();
+        return new KafkaCustomerDataConsumer(properties);
     }
 
-    private static DataPersister<CustomerModel> getPersister() {
+    private static DataPersister<CustomerModel> getCustomerPersister() {
         val properties = new PropertyReader().getPropertiesByFilename("mongo.properties");
-
         return new MongoCustomerPersister(properties);
     }
 }
