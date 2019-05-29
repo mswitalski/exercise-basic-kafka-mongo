@@ -25,9 +25,9 @@ public class KafkaDataProducer<K, V> implements DataProducer<V> {
     @Override
     public void send(Stream<V> dataStream) {
         try (Producer<K, V> conn = producerProvider.provide(properties)) {
-            dataStream.forEach(el -> conn.send(
-                new ProducerRecord<>(topicName, el),
-                (metadata, exception) -> log.info("Data was sent to Kafka to topic " + metadata.topic()))
+            dataStream.forEach(value -> conn.send(
+                new ProducerRecord<>(topicName, value),
+                (metadata, exception) -> log.info(value + " was sent to Kafka to topic: " + metadata.topic()))
             );
         }
     }
