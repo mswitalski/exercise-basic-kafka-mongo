@@ -8,7 +8,8 @@ import mswitalski.exercises.basickafkamongo.mongoloader.consumer.DataConsumer;
 import mswitalski.exercises.basickafkamongo.mongoloader.consumer.kafka.KafkaConsumerProvider;
 import mswitalski.exercises.basickafkamongo.mongoloader.consumer.kafka.KafkaCustomerDataConsumer;
 import mswitalski.exercises.basickafkamongo.mongoloader.persister.DataPersister;
-import mswitalski.exercises.basickafkamongo.mongoloader.persister.MongoCustomerPersister;
+import mswitalski.exercises.basickafkamongo.mongoloader.persister.mongo.MongoClientProvider;
+import mswitalski.exercises.basickafkamongo.mongoloader.persister.mongo.MongoCustomerPersister;
 
 /**
  * Application responsible for receiving data from chosen message broker
@@ -27,7 +28,7 @@ public class MongoLoaderApp {
     public static void main(String... args) {
         DataLoader<CustomerModel> dataLoader = new DataLoader<>(
             getCustomerConsumer(getKafkaConsumerProviderForCustomer()),
-            getCustomerPersister()
+            getCustomerPersister(getMongoClientProvider())
         );
         dataLoader.loadData();
     }
@@ -38,10 +39,14 @@ public class MongoLoaderApp {
         return new KafkaCustomerDataConsumer(properties, provider);
     }
 
-    private static DataPersister<CustomerModel> getCustomerPersister() {
+    private static DataPersister<CustomerModel> getCustomerPersister(MongoClientProvider provider) {
         val properties = new PropertyReader().getPropertiesByFilename("mongo.properties");
 
-        return new MongoCustomerPersister(properties);
+        return new MongoCustomerPersister(properties, provider);
+    }
+
+    private static MongoClientProvider getMongoClientProvider() {
+        return new MongoClientProvider();
     }
 
     private static KafkaConsumerProvider<Long, CustomerModel> getKafkaConsumerProviderForCustomer() {
