@@ -8,5 +8,5 @@ import java.util.stream.Stream;
  */
 public interface DataReceiver<T> {
 
-    Stream<T> getAll() throws ReceiverException;
+    Stream<T> getAll();
 }

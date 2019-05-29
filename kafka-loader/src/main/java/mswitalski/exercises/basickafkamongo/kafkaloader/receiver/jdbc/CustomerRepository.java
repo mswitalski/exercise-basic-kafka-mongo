@@ -22,7 +22,7 @@ public class CustomerRepository implements DataReceiver<CustomerModel> {
     }
 
     @Override
-    public Stream<CustomerModel> getAll() throws ReceiverException {
+    public Stream<CustomerModel> getAll() {
         String query = "SELECT * FROM customers";
         List<CustomerModel> results = new ArrayList<>();
 
