@@ -51,7 +51,6 @@ class KafkaDataProducerTest {
     void shouldSendOneCustomerWhenProvidedWithStreamWithOneElement() {
         // given
         CustomerModel desiredModel = CustomerModel.builder()
-                .id(1)
                 .name("TestName")
                 .surname("TestSurname")
                 .email("T")
@@ -73,7 +72,6 @@ class KafkaDataProducerTest {
     void shouldSendTwoCustomersWhenProvidedWithStreamWithTwoElements() {
         // given
         CustomerModel firstDesiredModel = CustomerModel.builder()
-                .id(1)
                 .name("TestName1")
                 .surname("TestSurname1")
                 .email("T")
@@ -82,7 +80,6 @@ class KafkaDataProducerTest {
                 .occupation("TestOccupation1")
                 .build();
         CustomerModel otherDesiredModel = CustomerModel.builder()
-                .id(2)
                 .name("TestName2")
                 .surname("TestSurname2")
                 .email("T")

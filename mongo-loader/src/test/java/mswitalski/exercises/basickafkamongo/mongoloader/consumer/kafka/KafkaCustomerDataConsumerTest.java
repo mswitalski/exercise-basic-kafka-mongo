@@ -60,7 +60,6 @@ class KafkaCustomerDataConsumerTest {
     void shouldConsumeOneCustomerWhenKafkaTopicHoldsOneMessage() {
         // given
         CustomerModel desiredModel = CustomerModel.builder()
-                .id(1)
                 .name("TestName")
                 .surname("TestSurname")
                 .email("T")
@@ -85,7 +84,6 @@ class KafkaCustomerDataConsumerTest {
     void shouldConsumeTwoCustomersWhenKafkaTopicHoldsTwoMessages() {
         // given
         CustomerModel firstDesiredModel = CustomerModel.builder()
-                .id(1)
                 .name("TestName")
                 .surname("TestSurname")
                 .email("T")
@@ -94,7 +92,6 @@ class KafkaCustomerDataConsumerTest {
                 .occupation("TestOccupation")
                 .build();
         CustomerModel otherDesiredModel = CustomerModel.builder()
-                .id(2)
                 .name("TestName2")
                 .surname("TestSurname2")
                 .email("T")

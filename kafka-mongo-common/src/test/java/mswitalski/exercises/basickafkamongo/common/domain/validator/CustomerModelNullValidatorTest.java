@@ -13,7 +13,6 @@ class CustomerModelNullValidatorTest {
     void shouldPassValidationWithValidModel() {
         // given
         CustomerModel validModel = CustomerModel.builder()
-                .id(1)
                 .name("Name")
                 .surname("Surname")
                 .email("email@local.domain")
@@ -33,7 +32,6 @@ class CustomerModelNullValidatorTest {
     void shouldFailValidationWithNullAddress() {
         // given
         CustomerModel invalidModel = CustomerModel.builder()
-                .id(1)
                 .name("Name")
                 .surname("Surname")
                 .email("email@local.domain")
@@ -53,7 +51,6 @@ class CustomerModelNullValidatorTest {
     void shouldFailValidationWithNullGender() {
         // given
         CustomerModel invalidModel = CustomerModel.builder()
-                .id(1)
                 .name("Name")
                 .surname("Surname")
                 .email("email@local.domain")
@@ -73,7 +70,6 @@ class CustomerModelNullValidatorTest {
     void shouldFailValidationWithNullOccupation() {
         // given
         CustomerModel invalidModel = CustomerModel.builder()
-                .id(1)
                 .name("Name")
                 .surname("Surname")
                 .email("email@local.domain")

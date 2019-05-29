@@ -56,7 +56,6 @@ class CustomerRepositoryTest {
     void shouldReturnStreamWithOneCustomerWhenGotOneRecord() throws SQLException {
         // given
         CustomerModel desiredModel = CustomerModel.builder()
-                .id(1)
                 .name("TestName")
                 .surname("TestSurname")
                 .email("T")
@@ -65,7 +64,6 @@ class CustomerRepositoryTest {
                 .occupation("TestOccupation")
                 .build();
         when(mockedResultSet.next()).thenReturn(true, false);
-        when(mockedResultSet.getInt("id")).thenReturn(desiredModel.getId());
         when(mockedResultSet.getString("name")).thenReturn(desiredModel.getName());
         when(mockedResultSet.getString("surname")).thenReturn(desiredModel.getSurname());
         when(mockedResultSet.getString("email")).thenReturn(desiredModel.getEmail());
@@ -85,7 +83,6 @@ class CustomerRepositoryTest {
     void shouldReturnStreamWithTwoCustomersWhenGotTwoRecords() throws SQLException {
         // given
         CustomerModel firstDesiredModel = CustomerModel.builder()
-                .id(1)
                 .name("TestName1")
                 .surname("TestSurname1")
                 .email("T")
@@ -94,7 +91,6 @@ class CustomerRepositoryTest {
                 .occupation("TestOccupation1")
                 .build();
         CustomerModel otherDesiredModel = CustomerModel.builder()
-                .id(2)
                 .name("TestName2")
                 .surname("TestSurname2")
                 .email("T")
@@ -103,8 +99,6 @@ class CustomerRepositoryTest {
                 .occupation("TestOccupation2")
                 .build();
         when(mockedResultSet.next()).thenReturn(true, true, false);
-        when(mockedResultSet.getInt("id"))
-                .thenReturn(firstDesiredModel.getId(), otherDesiredModel.getId());
         when(mockedResultSet.getString("name"))
                 .thenReturn(firstDesiredModel.getName(), otherDesiredModel.getName());
         when(mockedResultSet.getString("surname"))

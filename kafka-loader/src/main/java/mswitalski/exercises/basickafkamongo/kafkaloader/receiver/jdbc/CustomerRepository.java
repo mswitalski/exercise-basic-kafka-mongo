@@ -42,7 +42,6 @@ public class CustomerRepository implements DataReceiver<CustomerModel> {
     }
 
     private CustomerModel convertRowToModel(ResultSet rs) throws SQLException {
-        int id = rs.getInt("id");
         String name = rs.getString("name");
         String surname = rs.getString("surname");
         String email = rs.getString("email");
@@ -51,7 +50,6 @@ public class CustomerRepository implements DataReceiver<CustomerModel> {
         String occupation = rs.getString("occupation");
 
         return CustomerModel.builder()
-            .id(id)
             .name(name)
             .surname(surname)
             .email(email)
