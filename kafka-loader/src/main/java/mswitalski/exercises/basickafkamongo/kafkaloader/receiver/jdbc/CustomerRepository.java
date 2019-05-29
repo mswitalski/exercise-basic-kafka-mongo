@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 
 public class CustomerRepository implements DataReceiver<CustomerModel> {
 
-    private JdbcConnector jdbcConnector;
+    private final JdbcConnector jdbcConnector;
 
     public CustomerRepository(JdbcConnector jdbcConnector) {
         this.jdbcConnector = Objects.requireNonNull(jdbcConnector);

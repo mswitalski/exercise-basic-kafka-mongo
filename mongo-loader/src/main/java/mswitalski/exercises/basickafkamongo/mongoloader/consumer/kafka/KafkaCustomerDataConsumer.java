@@ -18,9 +18,9 @@ import java.util.stream.StreamSupport;
 @Slf4j
 public class KafkaCustomerDataConsumer implements DataConsumer<CustomerModel> {
 
-    private Properties consumerProperties;
-    private KafkaConsumerCreator<Long, CustomerModel> consumerCreator;
-    private String topicName;
+    private final Properties consumerProperties;
+    private final KafkaConsumerCreator<Long, CustomerModel> consumerCreator;
+    private final String topicName;
 
     public KafkaCustomerDataConsumer(Properties properties, KafkaConsumerCreator<Long, CustomerModel> consumerCreator) {
         this.consumerProperties = Objects.requireNonNull(properties);

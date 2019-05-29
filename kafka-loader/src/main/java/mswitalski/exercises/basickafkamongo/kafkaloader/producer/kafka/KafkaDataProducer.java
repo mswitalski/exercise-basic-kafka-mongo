@@ -12,9 +12,9 @@ import java.util.stream.Stream;
 @Slf4j
 public class KafkaDataProducer<K, V> implements DataProducer<V> {
 
-    private Properties properties;
-    private KafkaProducerCreator<K, V> producerCreator;
-    private String topicName;
+    private final Properties properties;
+    private final KafkaProducerCreator<K, V> producerCreator;
+    private final String topicName;
 
     public KafkaDataProducer(Properties properties, KafkaProducerCreator<K, V> producerCreator) {
         this.properties = Objects.requireNonNull(properties);

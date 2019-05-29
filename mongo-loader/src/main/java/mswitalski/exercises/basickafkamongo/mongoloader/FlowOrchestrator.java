@@ -8,8 +8,8 @@ import java.util.stream.IntStream;
 
 class FlowOrchestrator<T> {
 
-    private DataConsumer<T> dataConsumer;
-    private DataPersister<T> dataPersister;
+    private final DataConsumer<T> dataConsumer;
+    private final DataPersister<T> dataPersister;
 
     FlowOrchestrator(DataConsumer<T> dataConsumer, DataPersister<T> dataPersister) {
         this.dataConsumer = Objects.requireNonNull(dataConsumer);

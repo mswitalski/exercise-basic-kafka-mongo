@@ -20,8 +20,8 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 @Slf4j
 public class MongoCustomerPersister implements DataPersister<CustomerModel> {
 
-    private Properties properties;
-    private CodecRegistry pojoCodecRegistry;
+    private final Properties properties;
+    private final CodecRegistry pojoCodecRegistry;
 
     public MongoCustomerPersister(Properties properties) {
         this.properties = Objects.requireNonNull(properties);
