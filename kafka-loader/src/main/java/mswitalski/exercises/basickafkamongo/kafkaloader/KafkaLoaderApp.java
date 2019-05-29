@@ -8,11 +8,11 @@ import mswitalski.exercises.basickafkamongo.common.domain.validator.ModelValidat
 import mswitalski.exercises.basickafkamongo.common.util.PropertyReader;
 import mswitalski.exercises.basickafkamongo.kafkaloader.producer.DataProducer;
 import mswitalski.exercises.basickafkamongo.kafkaloader.producer.kafka.KafkaDataProducer;
-import mswitalski.exercises.basickafkamongo.kafkaloader.producer.kafka.KafkaProducerCreator;
+import mswitalski.exercises.basickafkamongo.kafkaloader.producer.kafka.KafkaProducerProvider;
 import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.DataReceiver;
 import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.ReceiverException;
 import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.jdbc.CustomerRepository;
-import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.jdbc.JdbcConnector;
+import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.jdbc.JdbcConnectionProvider;
 
 /**
  * Application responsible for receiving data from chosen database
@@ -28,37 +28,36 @@ import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.jdbc.JdbcConnec
 @Slf4j
 public class KafkaLoaderApp {
 
-    public static void main(String... args) throws ReceiverException {
-        FlowOrchestrator<CustomerModel> orchestrator = new FlowOrchestrator<>(
+    public static void main(String... args) {
+        DataLoader<CustomerModel> dataLoader = new DataLoader<>(
             getCustomerDataReceiver(getJdbcConnector()),
             getCustomerNullValidator(),
-            getCustomerDataProducer()
+            getCustomerDataProducer(getKafkaProducerProviderForCustomer())
         );
-        orchestrator.run();
+        dataLoader.loadData();
     }
 
     private static ModelValidator<CustomerModel> getCustomerNullValidator() {
         return new CustomerModelNullValidator();
     }
 
-    private static DataReceiver<CustomerModel> getCustomerDataReceiver(JdbcConnector connector) {
+    private static DataReceiver<CustomerModel> getCustomerDataReceiver(JdbcConnectionProvider connector) {
         return new CustomerRepository(connector);
     }
 
-    private static JdbcConnector getJdbcConnector() {
+    private static JdbcConnectionProvider getJdbcConnector() {
         val properties = new PropertyReader().getPropertiesByFilename("postgres.properties");
 
-        return new JdbcConnector((String) properties.get("url"), properties);
+        return new JdbcConnectionProvider((String) properties.get("url"), properties);
     }
 
-    private static DataProducer<CustomerModel> getCustomerDataProducer() {
+    private static DataProducer<CustomerModel> getCustomerDataProducer(KafkaProducerProvider<Long, CustomerModel> provider) {
         val properties = new PropertyReader().getPropertiesByFilename("kafka-producer.properties");
 
-        return new KafkaDataProducer<>(properties, getKafkaProducerCreatorForCustomer());
+        return new KafkaDataProducer<>(properties, provider);
     }
 
-    private static KafkaProducerCreator<Long, CustomerModel> getKafkaProducerCreatorForCustomer() {
-
-        return new KafkaProducerCreator<>();
+    private static KafkaProducerProvider<Long, CustomerModel> getKafkaProducerProviderForCustomer() {
+        return new KafkaProducerProvider<>();
     }
 }

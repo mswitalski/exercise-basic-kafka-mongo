@@ -18,19 +18,19 @@ import java.util.stream.StreamSupport;
 @Slf4j
 public class KafkaCustomerDataConsumer implements DataConsumer<CustomerModel> {
 
-    private final Properties consumerProperties;
-    private final KafkaConsumerCreator<Long, CustomerModel> consumerCreator;
+    private final Properties properties;
     private final String topicName;
+    private final KafkaConsumerProvider<Long, CustomerModel> consumerProvider;
 
-    public KafkaCustomerDataConsumer(Properties properties, KafkaConsumerCreator<Long, CustomerModel> consumerCreator) {
-        this.consumerProperties = Objects.requireNonNull(properties);
-        this.consumerCreator = Objects.requireNonNull(consumerCreator);
+    public KafkaCustomerDataConsumer(Properties properties, KafkaConsumerProvider<Long, CustomerModel> consumerProvider) {
+        this.properties = Objects.requireNonNull(properties);
         this.topicName = Objects.requireNonNull(properties.getProperty("topic.name"));
+        this.consumerProvider = Objects.requireNonNull(consumerProvider);
     }
 
     @Override
     public Stream<CustomerModel> poll() {
-        try (Consumer<Long, CustomerModel> consumer = consumerCreator.create(consumerProperties)) {
+        try (Consumer<Long, CustomerModel> consumer = consumerProvider.provide(properties)) {
             consumer.subscribe(Collections.singletonList(topicName));
             ConsumerRecords<Long, CustomerModel> consumerRecords = consumer.poll(Duration.ofSeconds(1));
             Spliterator<ConsumerRecord<Long, CustomerModel>> spliterator = consumerRecords.spliterator();

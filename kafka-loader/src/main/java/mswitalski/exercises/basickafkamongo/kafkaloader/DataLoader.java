@@ -9,19 +9,19 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 @Slf4j
-class FlowOrchestrator<T> {
+class DataLoader<T> {
 
     private final DataReceiver<T> receiver;
     private final ModelValidator<T> validator;
     private final DataProducer<T> producer;
 
-    FlowOrchestrator(DataReceiver<T> receiver, ModelValidator<T> validator, DataProducer<T> producer) {
+    DataLoader(DataReceiver<T> receiver, ModelValidator<T> validator, DataProducer<T> producer) {
         this.receiver = Objects.requireNonNull(receiver);
         this.validator = Objects.requireNonNull(validator);
         this.producer = Objects.requireNonNull(producer);
     }
 
-    void run() {
+    void loadData() {
         Stream<T> allRecords = receiver.getAll();
         Stream<T> filteredRecords = allRecords.flatMap(o -> {
             if (validator.isValid(o)) {

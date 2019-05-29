@@ -5,7 +5,7 @@ import lombok.val;
 import mswitalski.exercises.basickafkamongo.common.domain.CustomerModel;
 import mswitalski.exercises.basickafkamongo.common.util.PropertyReader;
 import mswitalski.exercises.basickafkamongo.mongoloader.consumer.DataConsumer;
-import mswitalski.exercises.basickafkamongo.mongoloader.consumer.kafka.KafkaConsumerCreator;
+import mswitalski.exercises.basickafkamongo.mongoloader.consumer.kafka.KafkaConsumerProvider;
 import mswitalski.exercises.basickafkamongo.mongoloader.consumer.kafka.KafkaCustomerDataConsumer;
 import mswitalski.exercises.basickafkamongo.mongoloader.persister.DataPersister;
 import mswitalski.exercises.basickafkamongo.mongoloader.persister.MongoCustomerPersister;
@@ -25,17 +25,17 @@ import mswitalski.exercises.basickafkamongo.mongoloader.persister.MongoCustomerP
 public class MongoLoaderApp {
 
     public static void main(String... args) {
-        FlowOrchestrator<CustomerModel> orchestrator = new FlowOrchestrator<>(
-            getCustomerConsumer(),
+        DataLoader<CustomerModel> dataLoader = new DataLoader<>(
+            getCustomerConsumer(getKafkaConsumerProviderForCustomer()),
             getCustomerPersister()
         );
-        orchestrator.run();
+        dataLoader.loadData();
     }
 
-    private static DataConsumer<CustomerModel> getCustomerConsumer() {
+    private static DataConsumer<CustomerModel> getCustomerConsumer(KafkaConsumerProvider<Long, CustomerModel> provider) {
         val properties = new PropertyReader().getPropertiesByFilename("kafka-consumer.properties");
 
-        return new KafkaCustomerDataConsumer(properties, getKafkaConsumerCreatorForCustomer());
+        return new KafkaCustomerDataConsumer(properties, provider);
     }
 
     private static DataPersister<CustomerModel> getCustomerPersister() {
@@ -44,7 +44,7 @@ public class MongoLoaderApp {
         return new MongoCustomerPersister(properties);
     }
 
-    private static KafkaConsumerCreator<Long, CustomerModel> getKafkaConsumerCreatorForCustomer() {
-        return new KafkaConsumerCreator<>();
+    private static KafkaConsumerProvider<Long, CustomerModel> getKafkaConsumerProviderForCustomer() {
+        return new KafkaConsumerProvider<>();
     }
 }

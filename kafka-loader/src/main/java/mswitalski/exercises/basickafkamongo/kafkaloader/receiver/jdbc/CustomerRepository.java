@@ -15,10 +15,10 @@ import java.util.stream.Stream;
 
 public class CustomerRepository implements DataReceiver<CustomerModel> {
 
-    private final JdbcConnector jdbcConnector;
+    private final JdbcConnectionProvider connectionProvider;
 
-    public CustomerRepository(JdbcConnector jdbcConnector) {
-        this.jdbcConnector = Objects.requireNonNull(jdbcConnector);
+    public CustomerRepository(JdbcConnectionProvider connectionProvider) {
+        this.connectionProvider = Objects.requireNonNull(connectionProvider);
     }
 
     @Override
@@ -26,7 +26,7 @@ public class CustomerRepository implements DataReceiver<CustomerModel> {
         String query = "SELECT * FROM customers";
         List<CustomerModel> results = new ArrayList<>();
 
-        try (Connection conn = jdbcConnector.getConnection();
+        try (Connection conn = connectionProvider.provide();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)
         ) {

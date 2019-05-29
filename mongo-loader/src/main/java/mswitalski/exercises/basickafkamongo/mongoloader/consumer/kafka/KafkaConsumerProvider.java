@@ -6,9 +6,9 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import java.util.Objects;
 import java.util.Properties;
 
-public class KafkaConsumerCreator<K, V> {
+public class KafkaConsumerProvider<K, V> {
 
-    Consumer<K, V> create(Properties properties) {
+    Consumer<K, V> provide(Properties properties) {
         return new KafkaConsumer<>(Objects.requireNonNull(properties));
     }
 }

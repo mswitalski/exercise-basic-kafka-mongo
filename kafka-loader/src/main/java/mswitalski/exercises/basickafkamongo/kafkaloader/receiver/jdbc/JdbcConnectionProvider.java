@@ -9,17 +9,17 @@ import java.util.Objects;
 import java.util.Properties;
 
 @Slf4j
-public class JdbcConnector {
+public class JdbcConnectionProvider {
 
     private final String databaseUrl;
     private final Properties properties;
 
-    public JdbcConnector(String databaseUrl, Properties properties) {
+    public JdbcConnectionProvider(String databaseUrl, Properties properties) {
         this.databaseUrl = Objects.requireNonNull(databaseUrl);
         this.properties = Objects.requireNonNull(properties);
     }
 
-    Connection getConnection() throws SQLException {
+    Connection provide() throws SQLException {
         Connection conn;
         if (properties.isEmpty()) {
             conn = DriverManager.getConnection(databaseUrl);
