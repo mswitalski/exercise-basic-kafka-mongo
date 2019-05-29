@@ -9,9 +9,6 @@ import mswitalski.exercises.basickafkamongo.mongoloader.consumer.kafka.KafkaCons
 import mswitalski.exercises.basickafkamongo.mongoloader.consumer.kafka.KafkaCustomerDataConsumer;
 import mswitalski.exercises.basickafkamongo.mongoloader.persister.DataPersister;
 import mswitalski.exercises.basickafkamongo.mongoloader.persister.MongoCustomerPersister;
-import org.apache.log4j.xml.DOMConfigurator;
-
-import java.util.Objects;
 
 /**
  * Application responsible for receiving data from chosen message broker
@@ -28,15 +25,8 @@ import java.util.Objects;
 public class MongoLoaderApp {
 
     public static void main(String... args) {
-        configureLogger();
-
         FlowOrchestrator<CustomerModel> orchestrator = new FlowOrchestrator<>(getCustomerConsumer(), getCustomerPersister());
         orchestrator.run();
-    }
-
-    private static void configureLogger() {
-        DOMConfigurator.configure(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource
-            ("log4j.xml")).getPath());
     }
 
     private static DataConsumer<CustomerModel> getCustomerConsumer() {

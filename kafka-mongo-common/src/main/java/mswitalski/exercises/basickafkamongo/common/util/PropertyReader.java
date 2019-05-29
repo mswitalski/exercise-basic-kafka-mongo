@@ -14,17 +14,10 @@ import java.util.Properties;
 @Slf4j
 public class PropertyReader {
 
-    private final String root;
-
-    public PropertyReader() {
-        this.root = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("")).getPath();
-        log.info("Resources root directory: " + this.root);
-    }
-
     public Properties getPropertiesByFilename(String filename) {
         Properties properties = new Properties();
         try {
-            properties.load(new FileInputStream(root + filename));
+            properties.load(ClassLoader.getSystemResourceAsStream(filename));
             return properties;
 
         } catch (FileNotFoundException e) {

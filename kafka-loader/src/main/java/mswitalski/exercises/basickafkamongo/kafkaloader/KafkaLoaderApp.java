@@ -13,9 +13,6 @@ import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.DataReceiver;
 import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.ReceiverException;
 import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.jdbc.CustomerRepository;
 import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.jdbc.JdbcConnector;
-import org.apache.log4j.xml.DOMConfigurator;
-
-import java.util.Objects;
 
 /**
  * Application responsible for receiving data from chosen database
@@ -32,8 +29,6 @@ import java.util.Objects;
 public class KafkaLoaderApp {
 
     public static void main(String... args) throws ReceiverException {
-        configureLogger();
-
         FlowOrchestrator<CustomerModel> orchestrator = new FlowOrchestrator<>(
             getCustomerDataReceiver(getJdbcConnector()),
             getCustomerNullValidator(),
@@ -41,11 +36,6 @@ public class KafkaLoaderApp {
         );
 
         orchestrator.run();
-    }
-
-    private static void configureLogger() {
-        DOMConfigurator.configure(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource
-            ("log4j.xml")).getPath());
     }
 
     private static ModelValidator<CustomerModel> getCustomerNullValidator() {
