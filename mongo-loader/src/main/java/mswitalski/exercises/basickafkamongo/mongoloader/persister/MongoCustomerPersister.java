@@ -41,6 +41,7 @@ public class MongoCustomerPersister implements DataPersister<CustomerModel> {
             properties.getProperty("host"),
             Integer.parseInt(properties.getProperty("port"))
         );
+
         return new MongoClient(
             address,
             prepareMongoCredentials(),
@@ -52,11 +53,13 @@ public class MongoCustomerPersister implements DataPersister<CustomerModel> {
         String user = properties.getProperty("user");
         String authDb = properties.getProperty("auth_db");
         char[] password = properties.getProperty("password").toCharArray();
+
         return MongoCredential.createCredential(user, authDb, password);
     }
 
     private MongoCollection<CustomerModel> getCollection(MongoClient client) {
         MongoDatabase database = client.getDatabase(properties.getProperty("database"));
+
         return database.getCollection(properties.getProperty("collection"), CustomerModel.class);
     }
 }

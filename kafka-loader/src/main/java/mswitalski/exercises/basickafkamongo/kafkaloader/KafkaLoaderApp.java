@@ -34,7 +34,6 @@ public class KafkaLoaderApp {
             getCustomerNullValidator(),
             getCustomerDataProducer()
         );
-
         orchestrator.run();
     }
 
@@ -54,10 +53,12 @@ public class KafkaLoaderApp {
 
     private static DataProducer<CustomerModel> getCustomerDataProducer() {
         val properties = new PropertyReader().getPropertiesByFilename("kafka-producer.properties");
+
         return new KafkaDataProducer<>(properties, getKafkaProducerCreatorForCustomer());
     }
 
     private static KafkaProducerCreator<Long, CustomerModel> getKafkaProducerCreatorForCustomer() {
+
         return new KafkaProducerCreator<>();
     }
 }

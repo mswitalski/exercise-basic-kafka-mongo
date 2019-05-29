@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 class DriverManagerWrapper {
+
     static DriverManagerWrapper INSTANCE = new DriverManagerWrapper();
 
     private DriverManagerWrapper() {

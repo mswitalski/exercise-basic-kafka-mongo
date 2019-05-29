@@ -23,7 +23,7 @@ public class CustomerRepository implements DataReceiver<CustomerModel> {
 
     @Override
     public Stream<CustomerModel> getAll() throws ReceiverException {
-        String  query = "SELECT * FROM customers";
+        String query = "SELECT * FROM customers";
         List<CustomerModel> results = new ArrayList<>();
 
         try (Connection conn = jdbcConnector.getConnection();
@@ -33,6 +33,7 @@ public class CustomerRepository implements DataReceiver<CustomerModel> {
             while (rs.next()) {
                 results.add(convertRowToModel(rs));
             }
+
         } catch (SQLException e) {
             throw new ReceiverException("Could not successfully interact with SQL databse", e);
         }

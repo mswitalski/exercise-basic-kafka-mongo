@@ -16,8 +16,10 @@ public class PropertyReader {
 
     public Properties getPropertiesByFilename(String filename) {
         Properties properties = new Properties();
+
         try {
             properties.load(ClassLoader.getSystemResourceAsStream(filename));
+
             return properties;
 
         } catch (FileNotFoundException e) {

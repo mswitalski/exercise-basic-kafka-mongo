@@ -28,6 +28,7 @@ class FlowOrchestrator<T> {
                 return Stream.of(o);
             } else {
                 log.warn("Rejected invalid object: " + o);
+
                 return Stream.empty();
             }
         });

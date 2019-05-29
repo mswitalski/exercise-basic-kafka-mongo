@@ -25,17 +25,22 @@ import mswitalski.exercises.basickafkamongo.mongoloader.persister.MongoCustomerP
 public class MongoLoaderApp {
 
     public static void main(String... args) {
-        FlowOrchestrator<CustomerModel> orchestrator = new FlowOrchestrator<>(getCustomerConsumer(), getCustomerPersister());
+        FlowOrchestrator<CustomerModel> orchestrator = new FlowOrchestrator<>(
+            getCustomerConsumer(),
+            getCustomerPersister()
+        );
         orchestrator.run();
     }
 
     private static DataConsumer<CustomerModel> getCustomerConsumer() {
         val properties = new PropertyReader().getPropertiesByFilename("kafka-consumer.properties");
+
         return new KafkaCustomerDataConsumer(properties, getKafkaConsumerCreatorForCustomer());
     }
 
     private static DataPersister<CustomerModel> getCustomerPersister() {
         val properties = new PropertyReader().getPropertiesByFilename("mongo.properties");
+
         return new MongoCustomerPersister(properties);
     }
 
