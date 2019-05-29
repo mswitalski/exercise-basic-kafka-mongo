@@ -2,10 +2,8 @@ package mswitalski.exercises.basickafkamongo.common.util;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Objects;
 import java.util.Properties;
 
 /**

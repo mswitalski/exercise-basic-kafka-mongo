@@ -4,7 +4,6 @@ import mswitalski.exercises.basickafkamongo.mongoloader.consumer.DataConsumer;
 import mswitalski.exercises.basickafkamongo.mongoloader.persister.DataPersister;
 
 import java.util.Objects;
-import java.util.stream.IntStream;
 
 class DataLoader<T> {
 

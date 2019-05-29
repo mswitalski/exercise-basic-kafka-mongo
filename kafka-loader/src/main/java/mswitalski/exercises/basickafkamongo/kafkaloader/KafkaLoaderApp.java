@@ -10,7 +10,6 @@ import mswitalski.exercises.basickafkamongo.kafkaloader.producer.DataProducer;
 import mswitalski.exercises.basickafkamongo.kafkaloader.producer.kafka.KafkaDataProducer;
 import mswitalski.exercises.basickafkamongo.kafkaloader.producer.kafka.KafkaProducerProvider;
 import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.DataReceiver;
-import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.ReceiverException;
 import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.jdbc.CustomerRepository;
 import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.jdbc.JdbcConnectionProvider;
 
