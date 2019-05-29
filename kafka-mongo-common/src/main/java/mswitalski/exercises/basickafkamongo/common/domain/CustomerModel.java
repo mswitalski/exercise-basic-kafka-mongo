@@ -5,6 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Example model class that will be received from SQL database and transferred
+ * to MongoDB through Kafka. This model was built under assumption that database
+ * would not allow any other fields than 'address', 'gender' and 'occupation'
+ * to hold null values.
+ */
 @Builder
 @Data
 @NoArgsConstructor

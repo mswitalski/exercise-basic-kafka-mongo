@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.Properties;
 
 /**
- * Class responsible for reading resource files holding properties.
+ * Class responsible for reading resource files holding properties <b>that are stored under classpath</b>.
  */
 @Slf4j
 public class PropertyReader {

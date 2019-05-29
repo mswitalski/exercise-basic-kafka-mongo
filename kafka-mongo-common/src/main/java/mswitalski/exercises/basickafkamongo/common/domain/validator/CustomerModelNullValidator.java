@@ -5,7 +5,7 @@ import mswitalski.exercises.basickafkamongo.common.domain.CustomerModel;
 import java.util.Objects;
 
 /**
- * Validator checking whether all nullable fields are not nulls.
+ * Validator checking whether all <b>nullable</b> fields are not nulls in CustomerModel.
  */
 public class CustomerModelNullValidator implements ModelValidator<CustomerModel> {
 
