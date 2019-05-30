@@ -16,24 +16,24 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 @Slf4j
-public class KafkaCustomerDataConsumer implements DataConsumer<CustomerModel> {
+public class KafkaDataConsumer<T> implements DataConsumer<T> {
 
     private final Properties properties;
     private final String topicName;
-    private final KafkaConsumerProvider<Long, CustomerModel> consumerProvider;
+    private final KafkaConsumerProvider<Long, T> consumerProvider;
 
-    public KafkaCustomerDataConsumer(Properties properties, KafkaConsumerProvider<Long, CustomerModel> consumerProvider) {
+    public KafkaDataConsumer(Properties properties, KafkaConsumerProvider<Long, T> consumerProvider) {
         this.properties = Objects.requireNonNull(properties);
         this.topicName = Objects.requireNonNull(properties.getProperty("topic.name"));
         this.consumerProvider = Objects.requireNonNull(consumerProvider);
     }
 
     @Override
-    public Stream<CustomerModel> poll() {
-        try (Consumer<Long, CustomerModel> consumer = consumerProvider.provide(properties)) {
+    public Stream<T> poll() {
+        try (Consumer<Long, T> consumer = consumerProvider.provide(properties)) {
             consumer.subscribe(Collections.singletonList(topicName));
-            ConsumerRecords<Long, CustomerModel> consumerRecords = consumer.poll(Duration.ofSeconds(1));
-            Spliterator<ConsumerRecord<Long, CustomerModel>> spliterator = consumerRecords.spliterator();
+            ConsumerRecords<Long, T> consumerRecords = consumer.poll(Duration.ofSeconds(1));
+            Spliterator<ConsumerRecord<Long, T>> spliterator = consumerRecords.spliterator();
 
             return StreamSupport.stream(spliterator, false)
                 .map(ConsumerRecord::value);

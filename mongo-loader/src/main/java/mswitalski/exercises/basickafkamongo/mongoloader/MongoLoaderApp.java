@@ -6,7 +6,7 @@ import mswitalski.exercises.basickafkamongo.common.domain.CustomerModel;
 import mswitalski.exercises.basickafkamongo.common.util.PropertyReader;
 import mswitalski.exercises.basickafkamongo.mongoloader.consumer.DataConsumer;
 import mswitalski.exercises.basickafkamongo.mongoloader.consumer.kafka.KafkaConsumerProvider;
-import mswitalski.exercises.basickafkamongo.mongoloader.consumer.kafka.KafkaCustomerDataConsumer;
+import mswitalski.exercises.basickafkamongo.mongoloader.consumer.kafka.KafkaDataConsumer;
 import mswitalski.exercises.basickafkamongo.mongoloader.persister.DataPersister;
 import mswitalski.exercises.basickafkamongo.mongoloader.persister.mongo.MongoClientProvider;
 import mswitalski.exercises.basickafkamongo.mongoloader.persister.mongo.MongoCustomerPersister;
@@ -36,7 +36,7 @@ public class MongoLoaderApp {
     private static DataConsumer<CustomerModel> getCustomerConsumer(KafkaConsumerProvider<Long, CustomerModel> provider) {
         val properties = new PropertyReader().getPropertiesByFilename("kafka-consumer.properties");
 
-        return new KafkaCustomerDataConsumer(properties, provider);
+        return new KafkaDataConsumer<>(properties, provider);
     }
 
     private static DataPersister<CustomerModel> getCustomerPersister(MongoClientProvider provider) {

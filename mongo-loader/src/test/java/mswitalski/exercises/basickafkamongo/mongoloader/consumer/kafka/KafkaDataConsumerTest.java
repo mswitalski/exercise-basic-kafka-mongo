@@ -21,7 +21,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class KafkaCustomerDataConsumerTest {
+class KafkaDataConsumerTest {
 
     @Mock
     private KafkaConsumer<Long, CustomerModel> mockedConsumer;
@@ -32,7 +32,7 @@ class KafkaCustomerDataConsumerTest {
     @Mock
     private ConsumerRecords<Long, CustomerModel> modelConsumerRecords;
 
-    private KafkaCustomerDataConsumer sut;
+    private KafkaDataConsumer<CustomerModel> sut;
 
     @BeforeEach
     void setUpMocks() {
@@ -40,7 +40,7 @@ class KafkaCustomerDataConsumerTest {
         Properties mockedProperties = mock(Properties.class);
         when(mockedProperties.getProperty("topic.name")).thenReturn(topicName);
         when(mockedProvider.provide(any(Properties.class))).thenReturn(mockedConsumer);
-        sut = new KafkaCustomerDataConsumer(mockedProperties, mockedProvider);
+        sut = new KafkaDataConsumer<>(mockedProperties, mockedProvider);
     }
 
 
