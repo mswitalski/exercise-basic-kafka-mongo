@@ -76,8 +76,9 @@ class KafkaCustomerDataConsumerTest {
         Set<CustomerModel> resultSet = sut.poll().collect(Collectors.toSet());
 
         // then
-        assertThat(resultSet.size()).isEqualTo(1);
-        assertThat(resultSet.contains(desiredModel)).isTrue();
+        assertThat(resultSet)
+            .hasSize(1)
+            .contains(desiredModel);
     }
 
     @Test
@@ -108,9 +109,10 @@ class KafkaCustomerDataConsumerTest {
         Set<CustomerModel> resultSet = sut.poll().collect(Collectors.toSet());
 
         // then
-        assertThat(resultSet.size()).isEqualTo(2);
-        assertThat(resultSet.contains(firstDesiredModel)).isTrue();
-        assertThat(resultSet.contains(otherDesiredModel)).isTrue();
+        assertThat(resultSet)
+            .hasSize(2)
+            .contains(firstDesiredModel)
+            .contains(otherDesiredModel);
     }
 
     private Spliterator<ConsumerRecord<Long, CustomerModel>> createConsumerRecordSpliterator(CustomerModel... model) {
