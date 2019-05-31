@@ -13,6 +13,7 @@ The system should provide the following functionality:
 #### Nonfunctional Requirements
 Functionality should be delivered under given constraints:
 - use Java 8 Stream API
+- avoid using frameworks like Spring, etc.
 
 ## Modules
 Implemented system consists of the following functional modules:
