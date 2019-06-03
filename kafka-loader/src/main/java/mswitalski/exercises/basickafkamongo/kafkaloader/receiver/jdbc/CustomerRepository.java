@@ -31,7 +31,7 @@ public class CustomerRepository implements DataReceiver<CustomerModel> {
              ResultSet rs = stmt.executeQuery(query)
         ) {
             while (rs.next()) {
-                results.add(convertRowToModel(rs));
+                results.add(mapRowToModel(rs));
             }
 
         } catch (SQLException e) {
@@ -41,7 +41,7 @@ public class CustomerRepository implements DataReceiver<CustomerModel> {
         return results.stream();
     }
 
-    private CustomerModel convertRowToModel(ResultSet rs) throws SQLException {
+    private CustomerModel mapRowToModel(ResultSet rs) throws SQLException {
         String name = rs.getString("name");
         String surname = rs.getString("surname");
         String email = rs.getString("email");
