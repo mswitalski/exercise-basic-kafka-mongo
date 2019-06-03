@@ -12,6 +12,9 @@ import java.util.Properties;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
+/**
+ * Provider for MongoClient necessary to
+ */
 public class MongoClientProvider {
 
     private final CodecRegistry pojoCodecRegistry;

@@ -8,6 +8,12 @@ import mswitalski.exercises.basickafkamongo.kafkaloader.receiver.DataReceiver;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+/**
+ * Provides basic data loading functionality by reading data with provided receiver,
+ * validating it and loading it into a chosen message broker with provided producer.
+ *
+ * @param <T> class of a model to be processed
+ */
 @Slf4j
 class DataLoader<T> {
 
