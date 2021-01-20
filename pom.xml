@@ -23,7 +23,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <kafka-clients.version>2.2.0</kafka-clients.version>
-        <jackson-databind.version>2.9.9</jackson-databind.version>
+        <jackson-databind.version>2.9.10.7</jackson-databind.version>
         <slf4j.version>1.7.26</slf4j.version>
         <lombok.version>1.18.8</lombok.version>
 
